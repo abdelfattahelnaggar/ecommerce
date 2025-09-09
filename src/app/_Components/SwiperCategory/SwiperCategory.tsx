@@ -1,12 +1,14 @@
 "use client";
 import React from 'react'
+import Image from 'next/image';
+import { Category } from '@/types/product.type';
 //!== Import Swiper React components ==//
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 //!==End of Imports==//
 
-const SwiperCategory = ({categories}: {categories: any}) => {
+const SwiperCategory = ({categories}: {categories: Category[]}) => {
   return (
     <div className='w-lwh mx-auto overflow-hidden'>
       <div className="w-full py-3">
@@ -26,11 +28,13 @@ const SwiperCategory = ({categories}: {categories: any}) => {
           className="category-ticker !overflow-visible"
         >
 
-          {[...categories, ...categories].map((category: any) => (
+          {[...categories, ...categories].map((category: Category) => (
             <SwiperSlide key={category._id} className="!w-auto">
               <div className="flex items-center gap-3 bg-white rounded-full px-4 py-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group">
                 <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20  rounded-full overflow-hidden border-2 border-slate-200 group-hover:border-slate-300 transition-colors">
-                  <img 
+                  <Image 
+                    width={48}
+                    height={48}
                     src={category.image} 
                     alt={category.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"

@@ -8,17 +8,8 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-interface Product {
-  _id: string;
-  title: string;
-  imageCover: string;
-  price: number;
-  ratingsAverage: number;
-  category: {
-    name: string;
-  };
-}
+import Image from "next/image";
+import { Product } from "@/types/product.type";
 
 const HomeCard = ({ product }: { product: Product }) => {
   return (
@@ -28,7 +19,9 @@ const HomeCard = ({ product }: { product: Product }) => {
           <Link href={`/product-details/${product._id}`}>
             <CardHeader className="p-0 mb-3">
               <div className="overflow-hidden rounded-lg">
-                <img
+                <Image
+                  width={300}
+                  height={300}
                   src={product.imageCover}
                   alt={product.title}
                   className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
