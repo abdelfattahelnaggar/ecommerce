@@ -28,8 +28,8 @@ const SwiperCategory = ({categories}: {categories: Category[]}) => {
           className="category-ticker !overflow-visible"
         >
 
-          {[...categories, ...categories].map((category: Category) => (
-            <SwiperSlide key={category._id} className="!w-auto">
+          {[...categories, ...categories].map((category: Category, index: number) => (
+            <SwiperSlide key={`${category._id}-${index}`} className="!w-auto">
               <div className="flex items-center gap-3 bg-white rounded-full px-4 py-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group">
                 <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20  rounded-full overflow-hidden border-2 border-slate-200 group-hover:border-slate-300 transition-colors">
                   <Image 
