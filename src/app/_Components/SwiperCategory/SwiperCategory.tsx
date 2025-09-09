@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import Image from 'next/image';
-import { Category } from '@/types/product.type';
+import { Category } from '@/types/category.type';
 //!== Import Swiper React components ==//
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
