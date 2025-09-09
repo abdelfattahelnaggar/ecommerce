@@ -32,7 +32,7 @@ const Register = () => {
   });
   const handleRegister = async (values: RegisterSchemaType) => {
     try {
-      const { data } = await axios.post(
+      await axios.post(
         "https://ecommerce.routemisr.com/api/v1/auth/signup",
         values
       );

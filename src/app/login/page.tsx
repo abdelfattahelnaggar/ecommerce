@@ -15,7 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const Login = () => {
   const router = useRouter();
@@ -30,7 +29,7 @@ const Login = () => {
   });
   const handleLogin = async (values: LoginSchemaType) => {
     try {
-      const { data } = await axios.post(
+      await axios.post(
         "https://ecommerce.routemisr.com/api/v1/auth/signin",
         values
       );
