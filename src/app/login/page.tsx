@@ -12,12 +12,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { loginSchema, LoginSchemaType } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+//!====== End of imports =======//
 
 const Login = () => {
-  const router = useRouter();
   const form = useForm<LoginSchemaType>({
     defaultValues: {
       email: "",
@@ -28,32 +27,28 @@ const Login = () => {
     reValidateMode: "onChange",
   });
   const handleLogin = async (values: LoginSchemaType) => {
-    try {
-      await axios.post(
-        "https://ecommerce.routemisr.com/api/v1/auth/signin",
-        values
-      );
-
+    const res = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+      callbackUrl: "/",
+    });
+    if (res?.ok) {
       // Success toast
       toast.success("Login successful!", {
         position: "top-center",
-        duration: 4000,
+        duration: 3000,
         icon: <i className="fas fa-check-circle text-green-600"></i>,
         style: {
           color: "#16a34a", // Green color for message
         },
       });
-
-      router.push("/");
-    } catch (error: unknown) {
-      // Error toast
-      const errorMessage =
-        (error as AxiosError<{ message: string }>).response?.data?.message ||
-        "Login failed. Please try again.";
-
-      toast.error(errorMessage, {
+      window.location.href = res.url || "/";
+    } else {
+      console.log(res);
+      toast.error("Invalid credentials!", {
         position: "top-center",
-        duration: 5000,
+        duration: 3000,
         icon: <i className="fas fa-times-circle text-red-600"></i>,
         action: {
           label: "Retry",

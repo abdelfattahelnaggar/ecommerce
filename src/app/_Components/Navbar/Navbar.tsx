@@ -1,0 +1,212 @@
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
+import logo from "@/Assets/screens/freshcart-logo.svg";
+import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
+
+const Navbar = () => {
+  const { data: session, status } = useSession();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut({
+        callbackUrl: "/login",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+  return (
+    <>
+      <div className="bg-slate-100 p-5">
+        <div className="w-full md:w-4/5 mx-auto">
+          {/* Desktop & Mobile Header */}
+          <div className="flex justify-between items-center relative">
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/">
+                <Image src={logo} alt="logo" priority />
+              </Link>
+            </div>
+
+            {/* Desktop Navigation Links - Center */}
+            {status === "authenticated" && (
+              <ul className="hidden lg:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
+                <li>
+                  <Link href="/categories" className="text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300">
+                    Categories
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/brands" className="text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300">
+                    Brands
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/cart" className="text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300">
+                    Cart
+                  </Link>
+                </li>
+              </ul>
+            )}
+
+            {/* Desktop Right Side - Social Icons & Auth */}
+            <div className="hidden lg:flex items-center gap-8">
+              {/* Social Icons */}
+              <div className="flex gap-2">
+                <i className="fab fa-facebook-f text-slate-600 hover:text-blue-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-blue-50"></i>
+                <i className="fab fa-x-twitter text-slate-600 hover:text-slate-900 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-slate-100"></i>
+                <i className="fab fa-instagram text-slate-600 hover:text-pink-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-pink-50"></i>
+                <i className="fab fa-linkedin text-slate-600 hover:text-blue-700 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-blue-50"></i>
+                <i className="fab fa-youtube text-slate-600 hover:text-red-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50"></i>
+              </div>
+
+              {/* Auth Buttons */}
+              {status === "unauthenticated" && (
+                <div className="flex gap-3">
+                  <Link 
+                    href="/login"
+                    className="px-4 py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-slate-400 bg-white hover:bg-slate-50"
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    href="/register"
+                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors duration-300"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+
+              {/* User Profile & Logout */}
+              {status === "authenticated" && (
+                <div className="flex items-center gap-3">
+                  <Link 
+                    href="/profile"
+                    className="flex items-center gap-1 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                  >
+                    <i className="fas fa-user text-sm"></i>
+                    <span className="capitalize">{session?.user?.name?.split(" ")[0]}</span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 text-slate-600 hover:text-red-600 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-red-300 bg-white hover:bg-red-50"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 text-slate-700 hover:text-slate-900 transition-colors duration-300"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
+            </button>
+          </div>
+
+          {/* Loading State */}
+          {status === "loading" && (
+            <div className="text-center py-4">
+              <span className="text-slate-600">Loading...</span>
+            </div>
+          )}
+
+          {/* Mobile Menu */}
+          {isMobileMenuOpen && (
+            <div className="lg:hidden mt-4 py-4 border-t border-slate-200">
+              {/* Mobile Navigation Links */}
+              {status === "authenticated" && (
+                <div className="space-y-3 mb-4">
+                  <Link 
+                    href="/categories" 
+                    className="block py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Categories
+                  </Link>
+                  <Link 
+                    href="/brands" 
+                    className="block py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Brands
+                  </Link>
+                  <Link 
+                    href="/cart" 
+                    className="block py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Cart
+                  </Link>
+                </div>
+              )}
+
+              {/* Mobile Auth Buttons */}
+              {status === "unauthenticated" && (
+                <div className="space-y-3 mb-4">
+                  <Link 
+                    href="/login"
+                    className="block w-full text-center px-4 py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-slate-400 bg-white hover:bg-slate-50"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    href="/register"
+                    className="block w-full text-center px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+
+              {/* Mobile User Profile & Logout */}
+              {status === "authenticated" && (
+                <div className="space-y-3 mb-4">
+                  <Link 
+                    href="/profile"
+                    className="flex items-center justify-center gap-2 w-full py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <i className="fas fa-user text-sm"></i>
+                    <span className="capitalize">{session?.user?.name?.split(" ")[0]}</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full px-4 py-2 text-slate-600 hover:text-red-600 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-red-300 bg-white hover:bg-red-50"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                  </button>
+                </div>
+              )}
+
+              {/* Mobile Social Icons */}
+              <div className="flex justify-center gap-2">
+                <i className="fab fa-facebook-f text-slate-600 hover:text-blue-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-blue-50"></i>
+                <i className="fab fa-x-twitter text-slate-600 hover:text-slate-900 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-slate-100"></i>
+                <i className="fab fa-instagram text-slate-600 hover:text-pink-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-pink-50"></i>
+                <i className="fab fa-linkedin text-slate-600 hover:text-blue-700 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-blue-50"></i>
+                <i className="fab fa-youtube text-slate-600 hover:text-red-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50"></i>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+export default Navbar;

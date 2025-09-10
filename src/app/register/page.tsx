@@ -32,8 +32,8 @@ const Register = () => {
   });
   const handleRegister = async (values: RegisterSchemaType) => {
     try {
-      await axios.post(
-        "https://ecommerce.routemisr.com/api/v1/auth/signup",
+      const { data } = await axios.post(
+        `${process.env.API_BASE_URL}/auth/signup`,
         values
       );
 
@@ -88,15 +88,15 @@ const Register = () => {
 
         {/* Form Card */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-          <Form {...form}>
+     <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleRegister)}
               className="space-y-6"
             >
               {/* Name Field */}
-              <FormField
-                control={form.control}
-                name="name"
+        <FormField
+          control={form.control}
+          name="name"
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-slate-700 font-medium">
@@ -214,11 +214,11 @@ const Register = () => {
                 control={form.control}
                 name="phone"
                 render={({ field, fieldState }) => (
-                  <FormItem>
+            <FormItem>
                     <FormLabel className="text-slate-700 font-medium">
                       Phone Number
                     </FormLabel>
-                    <FormControl>
+              <FormControl>
                       <div className="relative">
                         <Input
                           type="tel"
@@ -228,15 +228,15 @@ const Register = () => {
                         />
                         <i className="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
-                    </FormControl>
+              </FormControl>
                     {fieldState.error && (
                       <p className="text-red-500 text-sm mt-1">
                         {fieldState.error.message}
                       </p>
                     )}
-                  </FormItem>
-                )}
-              />
+            </FormItem>
+          )}
+        />
 
               {/* Submit Button */}
               <Button
@@ -256,8 +256,8 @@ const Register = () => {
                   </>
                 )}
               </Button>
-            </form>
-          </Form>
+      </form>
+     </Form>
 
           {/* Login Link */}
           <div className="text-center mt-6 pt-6 border-t border-slate-200">
