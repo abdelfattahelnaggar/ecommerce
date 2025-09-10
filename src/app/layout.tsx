@@ -17,14 +17,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FreshCart - Modern Ecommerce Store",
-  description: "Discover premium quality products at unbeatable prices. Shop from our wide range of fashion, electronics, and daily essentials.",
-  keywords: ["ecommerce", "online shopping", "fashion", "electronics", "fresh cart"],
+  description:
+    "Discover premium quality products at unbeatable prices. Shop from our wide range of fashion, electronics, and daily essentials.",
+  keywords: [
+    "ecommerce",
+    "online shopping",
+    "fashion",
+    "electronics",
+    "fresh cart",
+  ],
   authors: [{ name: "Abdelfattah Elnaggar" }],
-  icons: {
-    icon: "./Assets/screens/favicon/shopping.png",
-    shortcut: "./Assets/screens/favicon/shopping.png",
-    apple: "./Assets/screens/favicon/shopping.png",
-  },
 };
 
 export default function RootLayout({
