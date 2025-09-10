@@ -110,12 +110,12 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
               <Image
                 width={300}
                 height={300}
-                src={product.imageCover}
+            src={product.imageCover}
                 className="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-300"
-                alt={product.title}
+            alt={product.title}
                 priority
-              />
-            </div>
+          />
+        </div>
           </div>
           <div className="w-2/3 ps-5 space-y-6">
             {/* Category Badge */}
@@ -133,7 +133,7 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
 
             {/* Rating */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <i
                     key={i}
@@ -146,8 +146,8 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
                 ))}
               </div>
               <span className="font-semibold text-gray-700">
-                {product.ratingsAverage}
-              </span>
+              {product.ratingsAverage}
+            </span>
               <span className="text-gray-500 text-sm">
                 ({product.ratingsQuantity || 0} reviews)
               </span>
@@ -159,7 +159,7 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
                 {product.price}
               </span>
               <span className="text-lg text-gray-600 font-medium">EGP</span>
-            </div>
+          </div>
 
             {/* Action Buttons */}
             <div className="space-y-4 pt-4">
@@ -168,8 +168,8 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
                 className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300"
               >
                 <i className="fas fa-shopping-cart mr-3"></i>
-                Add to Cart
-              </Button>
+            Add to Cart
+          </Button>
 
               <div className="grid grid-cols-2 gap-3">
                 <Button

@@ -4,12 +4,24 @@ import React, { useState } from "react";
 import logo from "@/Assets/screens/freshcart-logo.svg";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
   const handleLogout = async () => {
+    setIsLogoutDialogOpen(false);
     try {
       await signOut({
         callbackUrl: "/login",
@@ -92,13 +104,44 @@ const Navbar = () => {
                     <i className="fas fa-user text-sm"></i>
                     <span className="capitalize">{session?.user?.name?.split(" ")[0]}</span>
                   </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 text-slate-600 hover:text-red-600 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-red-300 bg-white hover:bg-red-50"
-                  >
-                    <i className="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                  </button>
+                  <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+                    <DialogTrigger asChild>
+                      <button className="px-4 py-2 text-slate-600 hover:text-red-600 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-red-300 bg-white hover:bg-red-50">
+                        <i className="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                            <i className="fas fa-sign-out-alt text-red-600"></i>
+                          </div>
+                          Confirm Logout
+                        </DialogTitle>
+                        <DialogDescription>
+                          Are you sure you want to logout from your account? You&apos;ll need to sign in again to access your account.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="flex gap-2 sm:gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setIsLogoutDialogOpen(false)}
+                          className="flex-1"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          onClick={handleLogout}
+                          className="flex-1"
+                        >
+                          <i className="fas fa-sign-out-alt mr-2"></i>
+                          Logout
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
             </div>
@@ -115,8 +158,8 @@ const Navbar = () => {
 
           {/* Loading State */}
           {status === "loading" && (
-            <div className="text-center py-4">
-              <span className="text-slate-600">Loading...</span>
+            <div className="text-center text-slate-600">
+              Loading...
             </div>
           )}
 
@@ -181,16 +224,47 @@ const Navbar = () => {
                     <i className="fas fa-user text-sm"></i>
                     <span className="capitalize">{session?.user?.name?.split(" ")[0]}</span>
                   </Link>
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full px-4 py-2 text-slate-600 hover:text-red-600 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-red-300 bg-white hover:bg-red-50"
-                  >
-                    <i className="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                  </button>
+                  <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+                    <DialogTrigger asChild>
+                      <button
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="w-full px-4 py-2 text-slate-600 hover:text-red-600 font-medium transition-colors duration-300 border border-slate-300 rounded-lg hover:border-red-300 bg-white hover:bg-red-50"
+                      >
+                        <i className="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                            <i className="fas fa-sign-out-alt text-red-600"></i>
+                          </div>
+                          Confirm Logout
+                        </DialogTitle>
+                        <DialogDescription>
+                          Are you sure you want to logout from your account? You&apos;ll need to sign in again to access your account.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="flex gap-2 sm:gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setIsLogoutDialogOpen(false)}
+                          className="flex-1"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          onClick={handleLogout}
+                          className="flex-1"
+                        >
+                          <i className="fas fa-sign-out-alt mr-2"></i>
+                          Logout
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
 

@@ -14,6 +14,7 @@ import { loginSchema, LoginSchemaType } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 //!====== End of imports =======//
 
 const Login = () => {
@@ -166,12 +167,12 @@ const Login = () => {
           <div className="text-center mt-6 pt-6 border-t border-slate-200">
             <p className="text-slate-600">
               Don&apos;t have an account?{" "}
-              <a
+              <Link
                 href="/register"
                 className="text-slate-800 font-medium hover:underline transition-colors hover:text-slate-600"
               >
                 Sign up here
-              </a>
+              </Link>
             </p>
           </div>
           {/* Forgot Password Section */}
@@ -186,13 +187,13 @@ const Login = () => {
               <p className="text-slate-600 text-sm mb-3">
                 Don&apos;t worry! It happens to the best of us.
               </p>
-              <a
-                href="/forgot-password"
+              <Link
+                href="/reset-password"
                 className="inline-flex items-center px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors duration-300 text-sm"
               >
                 <i className="fas fa-unlock-alt mr-2"></i>
                 Reset Your Password
-              </a>
+              </Link>
             </div>
           </div>
         </div>
