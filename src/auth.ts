@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
         }
 
         try {
-          const API_BASE_URL = process.env.API_BASE_URL;
+           const API_BASE_URL = process.env.API_BASE_URL || 'https://ecommerce.routemisr.com/api/v1';
           const res = await fetch(`${API_BASE_URL}/auth/signin`, {
             method: "POST",
             headers: {

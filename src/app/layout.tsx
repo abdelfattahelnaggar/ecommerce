@@ -5,7 +5,6 @@ import Navbar from "@/app/_Components/Navbar/Navbar";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/Providers";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,9 +21,9 @@ export const metadata: Metadata = {
   keywords: ["ecommerce", "online shopping", "fashion", "electronics", "fresh cart"],
   authors: [{ name: "Abdelfattah Elnaggar" }],
   icons: {
-    icon: "/Assets/screens/favicon/shopping.png",
-    shortcut: "/Assets/screens/favicon/shopping.png",
-    apple: "/Assets/screens/favicon/shopping.png",
+    icon: "./Assets/screens/favicon/shopping.png",
+    shortcut: "./Assets/screens/favicon/shopping.png",
+    apple: "./Assets/screens/favicon/shopping.png",
   },
 };
 
