@@ -2,13 +2,18 @@
 
 A modern, responsive ecommerce application built with Next.js 14, featuring a sleek design and smooth user experience.
 
+## 🌐 Live Demo
+
+🔗 **[View Live Demo](https://ecommerce-silk-seven-24.vercel.app/)**
+
 ## ✨ Features
 
+- 🔐 **Authentication System** with NextAuth.js integration
 - 🏠 **Dynamic Homepage** with product listings and interactive sliders
-- 🛍️ **Product Details** with enhanced UI and user-friendly design
-- 📱 **Responsive Design** optimized for all devices
+- 🛍️ **Product Details** with enhanced UI and responsive design
+- 📱 **Mobile-First Design** optimized for all devices
 - 🎨 **Modern UI Components** using Tailwind CSS and shadcn/ui
-- 🔄 **Interactive Sliders** with news ticker-style category browsing
+- 🔄 **Interactive Category Carousel** with news ticker-style browsing
 - ⚡ **Performance Optimized** with Next.js Image component and SSR
 - 🎯 **Professional Error Pages** (404, loading, error handling)
 
@@ -42,8 +47,10 @@ A modern, responsive ecommerce application built with Next.js 14, featuring a sl
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 14 (App Router)
+- **Authentication**: NextAuth.js
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui
+- **Form Handling**: React Hook Form + Zod validation
 - **Icons**: Font Awesome
 - **Slider**: Swiper.js
 - **Language**: TypeScript
@@ -63,10 +70,11 @@ src/
 
 ## 🎨 Key Components
 
+- **Navbar**: Responsive navigation with mobile menu
 - **MainSlider**: Hero slider with autoplay and navigation
-- **SwiperCategory**: News ticker-style category browser
+- **SwiperCategory**: News ticker-style category carousel
 - **HomeCard**: Product card with hover effects
-- **Navbar**: Responsive navigation header
+- **Authentication Forms**: Login/Register with validation
 
 ## 🌐 API Integration
 

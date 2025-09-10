@@ -17,8 +17,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ecommerce",
-  description: "Ecommerce",
+  title: "FreshCart - Modern Ecommerce Store",
+  description: "Discover premium quality products at unbeatable prices. Shop from our wide range of fashion, electronics, and daily essentials.",
+  keywords: ["ecommerce", "online shopping", "fashion", "electronics", "fresh cart"],
+  authors: [{ name: "FreshCart Team" }],
+  icons: {
+    icon: "/Assets/screens/favicon/shopping.png",
+    shortcut: "/Assets/screens/favicon/shopping.png",
+    apple: "/Assets/screens/favicon/shopping.png",
+  },
 };
 
 export default function RootLayout({
