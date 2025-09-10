@@ -32,8 +32,9 @@ const Register = () => {
   });
   const handleRegister = async (values: RegisterSchemaType) => {
     try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://ecommerce.routemisr.com/api/v1';
       const { data } = await axios.post(
-        `${process.env.API_BASE_URL}/auth/signup`,
+        `${API_BASE_URL}/auth/signup`,
         values
       );
 
