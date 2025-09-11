@@ -18,7 +18,7 @@ import Link from "next/link";
 
 const Cart = () => {
   const { status } = useSession();
-  const { numOfCartItems, totalCartPrice, products, removeCartItem } = useCart();
+  const { numOfCartItems, totalCartPrice, products, removeCartItem, updateCartItem, clearCart } = useCart();
   const [clearCartDialog, setClearCartDialog] = useState(false);
 
   async function removeItem(productId: string){
@@ -183,13 +183,7 @@ const Cart = () => {
                                   variant="outline"
                                   size="sm"
                                   className="w-8 h-8 p-0 text-slate-600 hover:text-slate-800 hover:border-slate-400"
-                                  onClick={() => {
-                                    // TODO: Implement decrease quantity
-                                    console.log(
-                                      "Decrease quantity for:",
-                                      item._id
-                                    );
-                                  }}
+                                  onClick={() => updateCartItem(item.product.id, item.count - 1)}
                                   disabled={item.count <= 1}
                                 >
                                   <i className="fas fa-minus text-xs"></i>
@@ -203,13 +197,7 @@ const Cart = () => {
                                   variant="outline"
                                   size="sm"
                                   className="w-8 h-8 p-0 text-slate-600 hover:text-slate-800 hover:border-slate-400"
-                                  onClick={() => {
-                                    // TODO: Implement increase quantity
-                                    console.log(
-                                      "Increase quantity for:",
-                                      item._id
-                                    );
-                                  }}
+                                  onClick={() => updateCartItem(item.product.id, item.count + 1)}
                                 >
                                   <i className="fas fa-plus text-xs"></i>
                                 </Button>
@@ -293,8 +281,7 @@ const Cart = () => {
               <Button
                 variant="destructive"
                 onClick={() => {
-                  // TODO: Implement actual clear cart functionality
-                  console.log("Clear entire cart confirmed");
+                  clearCart();
                   setClearCartDialog(false);
                 }}
                 className="flex-1"
