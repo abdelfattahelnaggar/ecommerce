@@ -7,9 +7,9 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Product } from "@/types/product.type";
+import AddToCartBtn from "../AddToCartBtn/AddToCartBtn";
 
 const HomeCard = ({ product }: { product: Product }) => {
   return (
@@ -51,13 +51,7 @@ const HomeCard = ({ product }: { product: Product }) => {
               </div>
             </CardFooter>
           </Link>
-          <Button
-            size="lg"
-            className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300"
-          >
-            <i className="fas fa-shopping-cart mr-3"></i>
-            Add to Cart
-          </Button>
+          <AddToCartBtn productId={product._id} />
         </Card>
       </div>
     </div>
