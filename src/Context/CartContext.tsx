@@ -1,5 +1,6 @@
+"use client";
+"use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getUserCartAction } from "@/CartActions/gitUserCart";
 import { Cart, ProductCart } from "@/types/cart.type";
 import { toast } from "sonner";
 import { removeCartItemAction } from "@/CartActions/removeCartItem";
@@ -56,7 +57,19 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
   async function getUserCart() {
     setIsLoading(true);
     try {
-      const data: Cart = await getUserCartAction();
+      const token = (session as { accessToken?: string } | null | undefined)?.accessToken;
+      if (!token) {
+        setNumOfCartItems(0);
+        setTotalCartPrice(0);
+        setProducts([]);
+        return;
+      }
+      // Call our server route which invokes the server action safely
+      const response = await fetch(`/api/cart`, { cache: "no-store" });
+      const data: Cart = await response.json();
+      if (!response.ok) {
+        throw new Error((data as unknown as { message?: string })?.message || "Failed to load cart");
+      }
       setNumOfCartItems(data.numOfCartItems);
       setTotalCartPrice(data.data.totalCartPrice);
       setProducts(data.data.products);
@@ -70,7 +83,8 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     getUserCart();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.accessToken]);
 
   return (
     <cartContext.Provider value={{ numOfCartItems, totalCartPrice, products, getUserCart, isLoading, removeCartItem }}>
