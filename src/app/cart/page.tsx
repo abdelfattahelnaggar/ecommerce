@@ -22,7 +22,7 @@ const Cart = () => {
   const [clearCartDialog, setClearCartDialog] = useState(false);
 
   async function removeItem(productId: string){
-    const data = await removeCartItem(productId);
+    await removeCartItem(productId);
   }
 
   if (status === "loading") {
