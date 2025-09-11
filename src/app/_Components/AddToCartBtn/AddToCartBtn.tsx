@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useCart } from "@/Context/CartContext";
 
 const AddToCartBtn = ({ productId }: { productId: string }) => {
   const { data: session, status } = useSession();
+  const { getUserCart } = useCart();
   const router = useRouter();
   const [authDialog, setAuthDialog] = useState({
     isOpen: false,
@@ -42,6 +44,10 @@ const AddToCartBtn = ({ productId }: { productId: string }) => {
 
     try {
       const data = await AddToCart(productId, session.accessToken);
+      
+      // Refresh cart data to update the badge in navbar
+      await getUserCart();
+      
       toast.success("Product has been successfully added to your cart.", {
         position: "top-center",
         duration: 3000,

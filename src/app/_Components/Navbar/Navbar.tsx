@@ -14,9 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/Context/CartContext";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+  const { numOfCartItems } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
@@ -58,8 +61,14 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/cart" className="text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300">
+                  <Link href="/cart" className="relative text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300 flex items-center gap-2">
+                    <i className="fas fa-shopping-cart"></i>
                     Cart
+                    {numOfCartItems > 0 && (
+                      <Badge variant="destructive" className="text-xs font-medium">
+                        {numOfCartItems}
+                      </Badge>
+                    )}
                   </Link>
                 </li>
               </ul>
@@ -185,10 +194,18 @@ const Navbar = () => {
                   </Link>
                   <Link 
                     href="/cart" 
-                    className="block py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                    className="flex items-center justify-between py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Cart
+                    <div className="flex items-center gap-2">
+                      <i className="fas fa-shopping-cart"></i>
+                      Cart
+                    </div>
+                    {numOfCartItems > 0 && (
+                      <Badge variant="destructive" className="text-xs font-medium">
+                        {numOfCartItems}
+                      </Badge>
+                    )}
                   </Link>
                 </div>
               )}
