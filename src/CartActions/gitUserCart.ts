@@ -3,7 +3,6 @@ import getMyToken from "@/utilities/token";
 
 export async function getUserCartAction() {
   const token = await getMyToken();
-  console.log("===================== token =====================", token);
   if (!token) {
     throw Error("Login First");
   }

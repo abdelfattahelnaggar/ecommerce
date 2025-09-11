@@ -18,8 +18,12 @@ import Link from "next/link";
 
 const Cart = () => {
   const { status } = useSession();
-  const { numOfCartItems, totalCartPrice, products } = useCart();
+  const { numOfCartItems, totalCartPrice, products, removeCartItem } = useCart();
   const [clearCartDialog, setClearCartDialog] = useState(false);
+
+  async function removeItem(productId: string){
+    const data = await removeCartItem(productId);
+  }
 
   if (status === "loading") {
     return (
@@ -32,26 +36,7 @@ const Cart = () => {
     );
   }
 
-  if (status === "unauthenticated") {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-6">
-          <i className="fas fa-shopping-cart text-6xl text-slate-400 mb-6"></i>
-          <h2 className="text-2xl font-bold text-slate-800 mb-4">
-            Please Login
-          </h2>
-          <p className="text-slate-600 mb-6">
-            You need to be logged in to view your cart.
-          </p>
-          <Link href="/login">
-            <Button className="bg-slate-800 hover:bg-slate-700">
-              Go to Login
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+ 
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -152,8 +137,7 @@ const Cart = () => {
                                 size="sm"
                                 className="ml-2 text-red-600 hover:text-red-700 hover:border-red-300 hover:bg-red-50"
                                 onClick={() => {
-                                  // TODO: Implement remove item functionality
-                                  console.log("Remove item:", item._id);
+                                  removeItem(item.product.id)
                                 }}
                               >
                                 <i className="fas fa-times text-xs"></i> Remove

@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { getUserCartAction } from "@/CartActions/gitUserCart";
 import { Cart, ProductCart } from "@/types/cart.type";
 import { toast } from "sonner";
+import { removeCartItemAction } from "@/CartActions/removeCartItem";
+import { useSession } from "next-auth/react";
 
 interface CartContextType {
   numOfCartItems: number;
@@ -9,6 +11,7 @@ interface CartContextType {
   products: ProductCart[];
   getUserCart: () => Promise<void>;
   isLoading: boolean;
+  removeCartItem: (productId: string) => Promise<Cart | null>;
 }
 
 export const cartContext = createContext<CartContextType | undefined>(undefined);
@@ -23,10 +26,32 @@ export const useCart = (): CartContextType => {
 };
 
 const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const { data: session } = useSession();
   const [numOfCartItems, setNumOfCartItems] = useState(0);
   const [totalCartPrice, setTotalCartPrice] = useState(0);
   const [products, setProducts] = useState<ProductCart[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+ 
+  async function removeCartItem(productId: string) {
+    try {
+      // Access token attached in next-auth session callback
+      const token = (session as { accessToken?: string } | null | undefined)?.accessToken;
+      if (!token) {
+        toast.error("Please login first");
+        return null;
+      }
+      const data: Cart = await removeCartItemAction(productId, token);
+      setNumOfCartItems(data.numOfCartItems);
+      setTotalCartPrice(data.data.totalCartPrice);
+      setProducts(data.data.products);
+      toast.success("Item removed from cart successfully");
+      return data;
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+      return null;
+    } 
+  }
 
   async function getUserCart() {
     setIsLoading(true);
@@ -36,7 +61,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
       setTotalCartPrice(data.data.totalCartPrice);
       setProducts(data.data.products);
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong while fetching cart");
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -48,7 +73,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <cartContext.Provider value={{ numOfCartItems, totalCartPrice, products, getUserCart, isLoading }}>
+    <cartContext.Provider value={{ numOfCartItems, totalCartPrice, products, getUserCart, isLoading, removeCartItem }}>
       {children}
     </cartContext.Provider>
   );
