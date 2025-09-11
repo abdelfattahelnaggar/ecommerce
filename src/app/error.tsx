@@ -7,7 +7,7 @@ interface ErrorProps {
   reset: () => void
 }
 
-const Error = ({ error, reset }: ErrorProps) => {
+const Error = ({  reset }: ErrorProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl w-full text-center">
