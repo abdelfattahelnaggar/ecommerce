@@ -1,13 +1,24 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import getUserAddresses, { UserAddress } from "@/apis/userAddresses";
+import changePassword, { ChangePasswordData } from "@/apis/changePassword";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import avatar from "@/Assets/screens/Naruto.jpg";
 import Image from "next/image";
 const ProfilePage = () => {
@@ -15,6 +26,13 @@ const ProfilePage = () => {
   const router = useRouter();
   const [addresses, setAddresses] = useState<UserAddress[]>([]);
   const [addressesLoading, setAddressesLoading] = useState(true);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState<ChangePasswordData>({
+    currentPassword: "",
+    password: "",
+    rePassword: "",
+  });
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -37,6 +55,60 @@ const ProfilePage = () => {
 
     fetchAddresses();
   }, [status, session?.accessToken]);
+
+  const handleChangePassword = async () => {
+    if (!session?.accessToken) {
+      toast.error("Please sign in to change your password");
+      return;
+    }
+
+    // Validation
+    if (!passwordData.currentPassword || !passwordData.password || !passwordData.rePassword) {
+      toast.error("Please fill in all password fields");
+      return;
+    }
+
+    if (passwordData.password !== passwordData.rePassword) {
+      toast.error("New password and confirmation password do not match");
+      return;
+    }
+
+    if (passwordData.password.length < 6) {
+      toast.error("New password must be at least 6 characters long");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      await changePassword(passwordData, session.accessToken);
+      
+      // Reset form
+      setPasswordData({
+        currentPassword: "",
+        password: "",
+        rePassword: "",
+      });
+      setIsChangePasswordOpen(false);
+      
+      toast.success("Password changed successfully! Redirecting to login...", {
+        duration: 3000,
+      });
+      
+      // Sign out user so they can sign in with new password
+      setTimeout(() => {
+        signOut({ 
+          callbackUrl: "/login",
+          redirect: true 
+        });
+      }, 2000); // Wait 2 seconds to show success message
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to change password";
+      toast.error(errorMessage);
+    } finally {
+      setChangingPassword(false);
+    }
+  };
 
   if (status === "loading") {
     return (
@@ -199,7 +271,7 @@ const ProfilePage = () => {
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="font-medium text-slate-900">
-                      Reset Password
+                      Change Password
                     </h4>
                     <p className="text-sm text-slate-600">
                       Update your account password for security
@@ -208,17 +280,90 @@ const ProfilePage = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    disabled
-                    className="opacity-50 cursor-not-allowed"
+                    onClick={() => setIsChangePasswordOpen(true)}
                   >
                     <i className="fas fa-key mr-2"></i>
-                    Coming Soon
+                    Change
                   </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
+
+        {/* Change Password Dialog */}
+        <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Change Password</DialogTitle>
+              <DialogDescription>
+                Enter your current password and choose a new password.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="currentPassword">Current Password</Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  placeholder="Enter your current password"
+                  value={passwordData.currentPassword}
+                  onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  placeholder="Enter new password (min 6 characters)"
+                  value={passwordData.password}
+                  onChange={(e) => setPasswordData(prev => ({ ...prev, password: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your new password"
+                  value={passwordData.rePassword}
+                  onChange={(e) => setPasswordData(prev => ({ ...prev, rePassword: e.target.value }))}
+                />
+              </div>
+              {passwordData.password && passwordData.rePassword && passwordData.password !== passwordData.rePassword && (
+                <p className="text-sm text-red-600">Passwords do not match</p>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsChangePasswordOpen(false);
+                  setPasswordData({
+                    currentPassword: "",
+                    password: "",
+                    rePassword: "",
+                  });
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleChangePassword}
+                disabled={changingPassword || passwordData.password !== passwordData.rePassword}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {changingPassword ? (
+                  <i className="fas fa-spinner fa-spin mr-2"></i>
+                ) : (
+                  <i className="fas fa-key mr-2"></i>
+                )}
+                {changingPassword ? "Changing..." : "Change Password"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
