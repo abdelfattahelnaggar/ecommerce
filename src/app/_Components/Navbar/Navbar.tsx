@@ -67,6 +67,12 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/allorders" className="text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300 flex items-center gap-2">
+                    <i className="fas fa-receipt"></i>
+                    Orders
+                  </Link>
+                </li>
+                <li>
                   <Link href="/cart" className="relative text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300 flex items-center gap-2">
                     <i className="fas fa-shopping-cart"></i>
                     Cart
@@ -197,6 +203,16 @@ const Navbar = () => {
                     <div className="flex items-center gap-2">
                       <i className="fas fa-heart"></i>
                       Wishlist
+                    </div>
+                  </Link>
+                  <Link 
+                    href="/allorders" 
+                    className="block py-2 text-slate-700 hover:text-slate-900 font-medium transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <i className="fas fa-receipt"></i>
+                      My Orders
                     </div>
                   </Link>
                   <Link 

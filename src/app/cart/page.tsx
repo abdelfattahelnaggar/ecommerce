@@ -18,10 +18,18 @@ import Link from "next/link";
 
 const Cart = () => {
   const { status } = useSession();
-  const { numOfCartItems, totalCartPrice, products, removeCartItem, updateCartItem, clearCart } = useCart();
+  const {
+    numOfCartItems,
+    totalCartPrice,
+    products,
+    removeCartItem,
+    updateCartItem,
+    clearCart,
+    cartId,
+  } = useCart();
   const [clearCartDialog, setClearCartDialog] = useState(false);
 
-  async function removeItem(productId: string){
+  async function removeItem(productId: string) {
     await removeCartItem(productId);
   }
 
@@ -35,8 +43,6 @@ const Cart = () => {
       </div>
     );
   }
-
- 
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -137,7 +143,7 @@ const Cart = () => {
                                 size="sm"
                                 className="ml-2 text-red-600 hover:text-red-700 hover:border-red-300 hover:bg-red-50"
                                 onClick={() => {
-                                  removeItem(item.product.id)
+                                  removeItem(item.product.id);
                                 }}
                               >
                                 <i className="fas fa-times text-xs"></i> Remove
@@ -183,7 +189,12 @@ const Cart = () => {
                                   variant="outline"
                                   size="sm"
                                   className="w-8 h-8 p-0 text-slate-600 hover:text-slate-800 hover:border-slate-400"
-                                  onClick={() => updateCartItem(item.product.id, item.count - 1)}
+                                  onClick={() =>
+                                    updateCartItem(
+                                      item.product.id,
+                                      item.count - 1
+                                    )
+                                  }
                                   disabled={item.count <= 1}
                                 >
                                   <i className="fas fa-minus text-xs"></i>
@@ -197,7 +208,12 @@ const Cart = () => {
                                   variant="outline"
                                   size="sm"
                                   className="w-8 h-8 p-0 text-slate-600 hover:text-slate-800 hover:border-slate-400"
-                                  onClick={() => updateCartItem(item.product.id, item.count + 1)}
+                                  onClick={() =>
+                                    updateCartItem(
+                                      item.product.id,
+                                      item.count + 1
+                                    )
+                                  }
                                 >
                                   <i className="fas fa-plus text-xs"></i>
                                 </Button>
@@ -237,10 +253,12 @@ const Cart = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Button className="w-full bg-slate-800 hover:bg-slate-700 py-3">
-                      <i className="fas fa-credit-card mr-2"></i>
-                      Proceed to Checkout
-                    </Button>
+                    <Link href={`/checkout/${cartId}`}>
+                      <Button className="w-full bg-slate-800 hover:bg-slate-700 py-3">
+                        <i className="fas fa-credit-card mr-2"></i>
+                        Proceed to Checkout
+                      </Button>
+                    </Link>
 
                     <Link href="/" className="block">
                       <Button variant="outline" className="w-full">

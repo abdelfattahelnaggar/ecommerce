@@ -11,6 +11,7 @@ interface CartContextType {
   numOfCartItems: number;
   totalCartPrice: number;
   products: ProductCart[];
+  cartId: string;
   getUserCart: () => Promise<void>;
   isLoading: boolean;
   removeCartItem: (productId: string) => Promise<Cart | null>;
@@ -36,6 +37,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [numOfCartItems, setNumOfCartItems] = useState(0);
   const [totalCartPrice, setTotalCartPrice] = useState(0);
   const [products, setProducts] = useState<ProductCart[]>([]);
+  const [cartId, setCartId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function removeCartItem(productId: string) {
@@ -51,6 +53,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
       setNumOfCartItems(data.numOfCartItems);
       setTotalCartPrice(data.data.totalCartPrice);
       setProducts(data.data.products);
+      setCartId(data.cartId);
       toast.success("Item removed from cart successfully");
       return data;
     } catch (error) {
@@ -73,6 +76,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
       setNumOfCartItems(0);
       setTotalCartPrice(0);
       setProducts([]);
+      setCartId("");
       toast.success("Cart cleared successfully");
       return data;
     } catch(error){
@@ -96,6 +100,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
       setNumOfCartItems(data.numOfCartItems);
       setTotalCartPrice(data.data.totalCartPrice);
       setProducts(data.data.products);
+      setCartId(data.cartId);
       toast.success("Cart item updated successfully");
       return data;
     } catch (error) {
@@ -114,6 +119,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
         setNumOfCartItems(0);
         setTotalCartPrice(0);
         setProducts([]);
+        setCartId("");
         return;
       }
       // Call our server route which invokes the server action safely
@@ -128,6 +134,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
       setNumOfCartItems(data.numOfCartItems);
       setTotalCartPrice(data.data.totalCartPrice);
       setProducts(data.data.products);
+      setCartId(data.cartId);
     } catch (error) {
       toast.error("Something went wrong while fetching cart");
       console.log(error);
@@ -147,6 +154,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
         numOfCartItems,
         totalCartPrice,
         products,
+        cartId,
         getUserCart,
         isLoading,
         removeCartItem,

@@ -3,7 +3,8 @@ import { decode } from "next-auth/jwt";
 import { cookies } from "next/headers";
 
 export default async function getMyToken() {
-  const encodedToken = (await cookies()).get("next-auth.session-token")?.value;
+  const cookieName = process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token";
+  const encodedToken = (await cookies()).get(cookieName)?.value;
   
   if (!encodedToken) {
     return null;
