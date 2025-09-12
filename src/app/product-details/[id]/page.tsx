@@ -1,13 +1,127 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import getSingleProduct from "@/apis/singleProduct";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Product } from "@/types/product.type";
 import AddToCartBtn from "@/app/_Components/AddToCartBtn/AddToCartBtn";
-const ProductDetails = async ({ params }: { params: { id: string } }) => {
-  const { id } = await params;
-  const product:Product = await getSingleProduct(id);
+import { addToWishlist, removeFromWishlist } from "@/apis/wishlist";
+import getWishlist from "@/apis/wishlist";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+const ProductDetails = ({ params }: { params: { id: string } }) => {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const resolvedParams = await params;
+        const productData = await getSingleProduct(resolvedParams.id);
+        setProduct(productData);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        toast.error("Failed to load product details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [params]);
+
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      if (status === "authenticated" && product && session?.accessToken) {
+        try {
+          const wishlistData = await getWishlist(session.accessToken);
+          if (wishlistData && wishlistData.data) {
+            const isProductInWishlist = wishlistData.data.some(
+              (item) => {
+                if (!item) return false;
+                
+                // Handle different possible structures - item might be the product or contain a product
+                const productInItem = item.product || item;
+                const itemProductId = productInItem.id || productInItem._id;
+                const currentProductId = product.id || product._id;
+                
+                return itemProductId === currentProductId;
+              }
+            );
+            setIsInWishlist(isProductInWishlist);
+          }
+        } catch (error) {
+          console.error("Error checking wishlist status:", error);
+        }
+      }
+    };
+
+    checkWishlistStatus();
+  }, [status, product, session?.accessToken]);
+
+  const handleWishlistToggle = async () => {
+    if (status !== "authenticated" || !session?.accessToken) {
+      toast.error("Please sign in to add items to your wishlist");
+      return;
+    }
+
+    if (!product) return;
+
+    setWishlistLoading(true);
+    try {
+      // Use the correct product ID format
+      const productId = product.id || product._id;
+      
+      if (isInWishlist) {
+        const success = await removeFromWishlist(productId, session.accessToken);
+        if (success) {
+          setIsInWishlist(false);
+          toast.success("Removed from wishlist");
+        } else {
+          toast.error("Failed to remove from wishlist");
+        }
+      } else {
+        const success = await addToWishlist(productId, session.accessToken);
+        if (success) {
+          setIsInWishlist(true);
+          toast.success("Added to wishlist");
+        } else {
+          toast.error("Failed to add to wishlist");
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling wishlist:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="bg-slate-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin text-4xl text-slate-600 mb-4"></i>
+          <p className="text-slate-600">Loading product details...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!product) {
+    return (
+      <section className="bg-slate-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <i className="fas fa-exclamation-triangle text-4xl text-slate-600 mb-4"></i>
+          <p className="text-slate-600">Product not found</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="bg-slate-50 min-h-screen">
       <div className="w-full px-5 md:w-4/5 md:px-0 mx-auto py-12">
@@ -82,12 +196,27 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
               <div className="grid grid-cols-2 gap-3">
                 {/*!----- Wishlist Button -----*/}
                 <Button
-                  variant="outline"
+                  variant={isInWishlist ? "default" : "outline"}
                   size="lg"
-                  className="font-medium rounded-xl border-2"
+                  className={`font-medium rounded-xl border-2 transition-all duration-300 ${
+                    isInWishlist 
+                      ? "bg-red-500 hover:bg-red-600 text-white border-red-500" 
+                      : "hover:border-red-500 hover:text-red-500"
+                  }`}
+                  onClick={handleWishlistToggle}
+                  disabled={wishlistLoading || status === "loading"}
                 >
-                  <i className="fas fa-heart mr-2"></i>
-                  Wishlist
+                  {wishlistLoading ? (
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                  ) : (
+                    <i className={`fas fa-heart mr-2 ${isInWishlist ? "text-white" : ""}`}></i>
+                  )}
+                  {wishlistLoading 
+                    ? "Processing..." 
+                    : isInWishlist 
+                      ? "In Wishlist" 
+                      : "Add to Wishlist"
+                  }
                 </Button>
                 {/*!----- Share Button -----*/}
                 <Button
