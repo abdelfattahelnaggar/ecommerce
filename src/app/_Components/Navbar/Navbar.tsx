@@ -36,7 +36,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <div className="bg-slate-100 p-5">
+      <div className="bg-slate-100 pb-5 pt-2">
         <div className="w-full md:w-4/5 mx-auto">
           {/* Desktop & Mobile Header */}
           <div className="flex justify-between items-center relative">
@@ -74,17 +74,8 @@ const Navbar = () => {
               </ul>
             )}
 
-            {/* Desktop Right Side - Social Icons & Auth */}
-            <div className="hidden lg:flex items-center gap-8">
-              {/* Social Icons */}
-              <div className="flex gap-2">
-                <i className="fab fa-facebook-f text-slate-600 hover:text-blue-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-blue-50"></i>
-                <i className="fab fa-x-twitter text-slate-600 hover:text-slate-900 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-slate-100"></i>
-                <i className="fab fa-instagram text-slate-600 hover:text-pink-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-pink-50"></i>
-                <i className="fab fa-linkedin text-slate-600 hover:text-blue-700 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-blue-50"></i>
-                <i className="fab fa-youtube text-slate-600 hover:text-red-600 transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50"></i>
-              </div>
-
+            {/* Desktop Right Side - Auth Only */}
+            <div className="hidden lg:flex items-center gap-4">
               {/* Auth Buttons */}
               {status === "unauthenticated" && (
                 <div className="flex gap-3">

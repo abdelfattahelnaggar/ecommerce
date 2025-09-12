@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const Categories = async () => {
   const categories: Category[] = await getAllCategories();
+  console.log(categories);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8">
@@ -27,7 +28,7 @@ const Categories = async () => {
           {categories.map((category: Category) => (
             <Link
               key={category._id}
-              href={`/categoryProducts/${category.slug}`}
+              href={`/category-products/${category.slug}`}
               className="group transform transition-all duration-300 hover:scale-105"
             >
               <Card className="h-full bg-white shadow-md hover:shadow-xl transition-all duration-300 border-0 ring-1 ring-slate-200 hover:ring-blue-300 overflow-hidden">
@@ -38,11 +39,11 @@ const Categories = async () => {
                       src={category.image}
                       alt={category.name}
                       fill
-                      className="object-contain  transition-all duration-700 group-hover:object-cover"
+                      className="object-contain  transition-all duration-600 group-hover:object-cover"
                       
                     />
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-600"></div>
                   </div>
                   
                   {/* Category Name */}

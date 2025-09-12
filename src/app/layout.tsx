@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/app/_Components/Navbar/Navbar";
+import UpperNavbar from "@/app/_Components/UpperNavbar/UpperNavbar";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/Providers";
@@ -42,6 +43,7 @@ export default function RootLayout({
       >
         <Providers>
           <Toaster />
+          <UpperNavbar />
           <Navbar />
           {children}
         </Providers>
